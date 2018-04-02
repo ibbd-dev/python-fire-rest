@@ -20,12 +20,8 @@ def hello(name='world'):
     return output_json('Hello {name} in func!'.format(name=name))
 
 
-def main():
+if __name__ == '__main__':
     API(Example)
     API(Example2)
     API(hello)
     run(debug=True)
-
-
-if __name__ == '__main__':
-    main()

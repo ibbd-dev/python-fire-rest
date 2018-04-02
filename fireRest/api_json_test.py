@@ -11,10 +11,6 @@ class Example:
         return output_json('Hello {name}!'.format(name=name))
 
 
-def main():
+if __name__ == '__main__':
     API(Example)
     run(debug=True)
-
-
-if __name__ == '__main__':
-    main()

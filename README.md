@@ -17,13 +17,9 @@ from fireRest import API, run
 def hello(name='world'):
     return 'Hello {name} in func!'.format(name=name)
 
-def main():
+if __name__ == '__main__':
     API(hello)        # 将hello这个函数包装成服务
     run(debug=True)   # 启动
-
-
-if __name__ == '__main__':
-    main()
 ```
 
 以上代码在运行之后，就会启动一个http的服务，默认监听端口为`20920`，可以如下访问：
@@ -46,12 +42,9 @@ class Example:
     def hello(self, name='world'):
         return 'Hello {name}!'.format(name=name)
 
-def main():
+if __name__ == '__main__':
     API(Example)
     run(debug=True)
-
-if __name__ == '__main__':
-    main()
 ```
 
 访问也类似，只需要加上相应的类名：
@@ -99,13 +92,10 @@ class Example2:
     def hello(self, name='world'):
         return output_json('Hello {name} in Example2!'.format(name=name))
 
-def main():
+if __name__ == '__main__':
     API(Example)
     API(Example2)
     run(debug=True)
-
-if __name__ == '__main__':
-    main()
 ```
 
 分别执行以下两个命令就能看到不同的输出：
