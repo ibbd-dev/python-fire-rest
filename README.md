@@ -7,6 +7,40 @@
 python setup.py install
 ```
 
+## Usage
+假设你实现的函数名是：`func_name`，将它封装成http服务如下：
+
+```python
+from fireRest import API, run
+
+API(func_name)        # 将func_name这个函数包装成服务
+run(debug=True)       # 启动
+```
+
+这样就启动了一个http服务，默认端口号为`20920`，访问地址为：`localhost:20920/func_name`，接口参数使用post方式提交，json格式。例如如下：
+
+```sh
+curl -XPOST localhost:20920/func_name -d '{
+    name: "hello"
+}'
+```
+
+如果需要改用其他的端口，可以使用run函数的port参数，例如：`run(port=8080)`，这样就将端口改成了8080。
+
+同理也可以将一个类包装成HTTP服务，例如：
+
+```python
+from fireRest import API, run
+
+API(class_name)       # 将class_name这个类包装成服务
+run(debug=True)       # 启动
+```
+
+使用上和函数基本一样，只是访问的地址变为：`localhost:20920/class_name/action_name`，这里的`action_name`指定访问方法的名字。
+
+另外，还可以也可以将多个函数或者多个类封装成http接口，具体可以看下面的Example。
+
+
 ## Example01: 最简单的服务
 把一个函数包装成HTTP Restful API服务：
 
