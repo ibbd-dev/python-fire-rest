@@ -34,7 +34,7 @@ def API(ctrl):
     if type(ctrl) is types.FunctionType:  # 函数
         key = (ctrl_name)
         action_list[key] = ctrl
-        action_names.append(['/'+ctrl_name, get_func_help(ctrl)])
+        action_names.append(['/'+ctrl_name, _get_func_help(ctrl)])
         return
 
     logger.warning(ctrl_name)
@@ -46,7 +46,7 @@ def API(ctrl):
 
         key = (ctrl_name, func_name)
         action_list[key] = getattr(obj, func_name)
-        action_names.append(['/'+ctrl_name+'/'+func_name, get_func_help(action_list[key])])
+        action_names.append(['/'+ctrl_name+'/'+func_name, _get_func_help(action_list[key])])
 
 
 def run(port=20920, debug=False, version='v1.0'):
@@ -83,7 +83,7 @@ def restFunc(func_name):
     if key not in action_list:
         return "not found!", 404
 
-    return parse_post(action_list[key])
+    return _parse_post(action_list[key])
 
 
 @app.route('/<string:func_name>', methods=['GET'])
@@ -94,7 +94,7 @@ def getRestFunc(func_name):
         return "not found!", 404
 
     func = action_list[key]
-    return parse_get(func)
+    return _parse_get(func)
 
 
 @app.route('/<string:ctrl>/<string:action>', methods=['POST'])
@@ -104,7 +104,7 @@ def restClass(ctrl, action):
     if key not in action_list:
         return "not found!", 404
 
-    return parse_post(action_list[key])
+    return _parse_post(action_list[key])
 
 
 @app.route('/<string:ctrl>/<string:action>', methods=['GET'])
@@ -115,10 +115,10 @@ def getRestClass(ctrl, action):
         return "not found!", 404
 
     func = action_list[key]
-    return parse_get(func)
+    return _parse_get(func)
 
 
-def parse_post(func):
+def _parse_post(func):
     params = request.get_json(force=True, silent=True)
     if config["debug"]:
         logger.warning("function: " + func.__name__)
@@ -129,23 +129,23 @@ def parse_post(func):
     return func()
 
 
-def parse_get(func):
+def _parse_get(func):
     p_help = request.args.get('help', '')
     p_help = p_help.lower()
 
     if p_help in ['true', '1']:
-        return print_func_help(func)
+        return _print_func_help(func)
 
     return ""
 
 
-def print_func_help(func):
+def _print_func_help(func):
     """打印函数的帮助信息"""
     msg_help = '' if func.__doc__ is None else func.__doc__.strip()
     return "<pre>"+msg_help
 
 
-def get_func_help(func):
+def _get_func_help(func):
     """获取函数帮助信息的第一行"""
     if func.__doc__ is None:
         return ''
