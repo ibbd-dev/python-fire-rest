@@ -13,4 +13,4 @@ class Example:
 
 if __name__ == '__main__':
     API(Example)
-    run(debug=True)
+    run(debug=True, output_json=False)

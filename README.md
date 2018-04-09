@@ -42,6 +42,24 @@ run(debug=True)       # 启动
 
 另外，还可以也可以将多个函数或者多个类封装成http接口，具体可以看下面的Example。
 
+### 接口的返回值
+接口的返回值，默认是以json的格式输出，格式如下：
+
+```json
+{
+  "code": 0,
+  "data": "这里是接口的返回内容，可以是字符串，整数，列表，字典等格式。", 
+  "messages": null
+}
+```
+
+其中：
+
+- code: 接口的请求状态码，0表示成功，非0表示失败
+- data: 接口的返回内容，可以是各种类型
+- message: 提示信息，帮助信息等内容
+
+
 ## Help
 服务启动之后，查看帮助文档非常简单，只需要在浏览器访问：`localhost:20920`，将会看到如下格式的内容：
 
@@ -142,7 +160,7 @@ from fireRest import API, run, output_json
 
 class Example:
     def hello(self, name='world'):
-        return output_json('Hello {name}!'.format(name=name))
+        return 'Hello {name}!'.format(name=name)
 ```
 
 返回格式如下：
@@ -163,11 +181,11 @@ from fireRest import API, run, output_json
 
 class Example:
     def hello(self, name='world'):
-        return output_json('Hello {name} in Example!'.format(name=name))
+        return 'Hello {name} in Example!'.format(name=name)
 
 class Example2:
     def hello(self, name='world'):
-        return output_json('Hello {name} in Example2!'.format(name=name))
+        return 'Hello {name} in Example2!'.format(name=name)
 
 if __name__ == '__main__':
     API(Example)

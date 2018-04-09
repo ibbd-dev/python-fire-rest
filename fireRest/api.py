@@ -8,7 +8,7 @@ import types
 from flask import Flask, jsonify
 from flask_restful import request
 
-__all__ = ['API', 'run', 'output_json']
+__all__ = ['API', 'run']
 
 logger = logging.getLogger()
 app = Flask(__name__)
@@ -20,6 +20,7 @@ action_names = []  # 用于输出帮助信息
 config = {
     "debug": False,
     "version": 'v1.0',
+    "output_json": True,
 }
 
 
@@ -49,16 +50,17 @@ def API(ctrl):
         action_names.append(['/'+ctrl_name+'/'+func_name, _get_func_help(action_list[key])])
 
 
-def run(port=20920, debug=False, version='v1.0'):
+def run(port=20920, debug=False, version='v1.0', output_json=True):
     """运行服务"""
     global config
     config["debug"] = debug
     config["version"] = version
+    config["output_json"] = output_json
     app.run(port=port, debug=debug)
     app.logger.addHandler(logger)
 
 
-def output_json(data, code=0, messages=None):
+def _output_json(data, code=0, messages=None):
     """以json结构返回数据"""
     return jsonify({
         "code": code,
@@ -83,7 +85,10 @@ def restFunc(func_name):
     if key not in action_list:
         return "not found!", 404
 
-    return _parse_post(action_list[key])
+    res = _parse_post(action_list[key])
+    if config['output_json']:
+        return _output_json(res)
+    return res
 
 
 @app.route('/<string:func_name>', methods=['GET'])
@@ -104,7 +109,10 @@ def restClass(ctrl, action):
     if key not in action_list:
         return "not found!", 404
 
-    return _parse_post(action_list[key])
+    res = _parse_post(action_list[key])
+    if config['output_json']:
+        return _output_json(res)
+    return res
 
 
 @app.route('/<string:ctrl>/<string:action>', methods=['GET'])
