@@ -56,7 +56,7 @@ def run(port=20920, debug=False, version='v1.0', output_json=True):
     config["debug"] = debug
     config["version"] = version
     config["output_json"] = output_json
-    app.run(port=port, debug=debug)
+    app.run(port=port, debug=debug, host='0.0.0.0')
     app.logger.addHandler(logger)
 
 
