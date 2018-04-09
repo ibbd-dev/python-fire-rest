@@ -7,6 +7,13 @@ from api import API, run, output_json
 
 
 def hello(name='world'):
+    """这是帮助函数
+    Args:
+        name str: 参数
+
+    Returns:
+        str
+    """
     return output_json('Hello {name} in func!'.format(name=name))
 
 

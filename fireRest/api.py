@@ -62,37 +62,70 @@ def output_json(data, code=0, messages=None):
     })
 
 
-@app.route('/<string:func>', methods=['POST'])
-def restFunc(func):
+@app.route('/<string:func_name>', methods=['POST'])
+def restFunc(func_name):
     """函数API入口"""
-    params = request.get_json(force=True, silent=True)
-    if config["debug"]:
-        logger.warning("function: " + func)
-        logger.warning(len(action_list))
-        logger.warning(params)
+    key = (func_name)
+    if key not in action_list:
+        return "not found!", 404
 
-    key = (func)
-    if key in action_list:
-        if params:
-            return action_list[key](**request.json)
-        return action_list[key]()
+    return parse_post(action_list[key])
 
-    return "not found!", 404
+
+@app.route('/<string:func_name>', methods=['GET'])
+def getRestFunc(func_name):
+    """帮助文档等"""
+    key = (func_name)
+    if key not in action_list:
+        return "not found!", 404
+
+    func = action_list[key]
+    return parse_get(func)
 
 
 @app.route('/<string:ctrl>/<string:action>', methods=['POST'])
 def restClass(ctrl, action):
     """类API入口"""
+    key = (ctrl, action)
+    if key not in action_list:
+        return "not found!", 404
+
+    return parse_post(action_list[key])
+
+
+@app.route('/<string:ctrl>/<string:action>', methods=['GET'])
+def getRestClass(ctrl, action):
+    """帮助文档等"""
+    key = (ctrl, action)
+    if key not in action_list:
+        return "not found!", 404
+
+    func = action_list[key]
+    return parse_get(func)
+
+
+def parse_post(func):
     params = request.get_json(force=True, silent=True)
     if config["debug"]:
-        logger.warning("ctroller: " + ctrl + "  action:" + action)
-        logger.warning(len(action_list))
+        logger.warning("function: " + func.__name__)
         logger.warning(params)
 
-    key = (ctrl, action)
-    if key in action_list:
-        if params:
-            return action_list[key](**request.json)
-        return action_list[key]()
+    if params:
+        return func(**request.json)
+    return func()
 
-    return "not found!", 404
+
+def parse_get(func):
+    p_help = request.args.get('help', '')
+    p_help = p_help.lower()
+
+    if p_help in ['true', '1']:
+        return print_func_help(func)
+
+    return ""
+
+
+def print_func_help(func):
+    """打印函数的帮助信息"""
+    msg_help = '' if func.__doc__ == None else func.__doc__
+    return "<pre>"+msg_help+"</pre>"

@@ -1,6 +1,8 @@
 # python-fire-rest
 快速包装Rest API服务，参考Google的Python Fire实现
 
+说明：在Python3.5下测试通过。
+
 ## Install
 
 ```sh
@@ -49,6 +51,13 @@ run(debug=True)       # 启动
 from fireRest import API, run
 
 def hello(name='world'):
+    """这是帮助函数
+    Args:
+        name str: 参数
+
+    Returns:
+        str
+    """
     return 'Hello {name} in func!'.format(name=name)
 
 if __name__ == '__main__':
@@ -65,6 +74,22 @@ curl -XPOST localhost:20920/hello -d '{
 ```
 
 其中，hello是函数的名字，函数的参数通过`json`的格式传递。其接口返回值就是函数的返回值。
+
+### 查看函数的帮助文档
+对于上面的函数hello，如果想查询其帮助文档，只需要在请求的url上增加`help=true`参数即可，例如可以在浏览器上直接打开该地址：`localhost:20920/hello?help=true`
+
+其输入如下：
+
+```
+这是帮助函数
+    Args:
+        name str: 参数
+
+    Returns:
+        str
+```
+
+其实输出的就是函数的注释部分
 
 ## Example02: 把类包装成服务
 除了函数，类也可以包装成API服务:
@@ -90,6 +115,8 @@ curl -XPOST localhost:20920/Example/hello -d '{
 ```
 
 这样就能访问到Example类的hello方法了。
+
+说明：查询帮助文档的方式也是类似。
 
 ## Example03: 以json的格式返回
 很简单，基于Example02的基础上，只要使用output_json进行返回即可，如下：
@@ -145,6 +172,4 @@ curl -XPOST localhost:20920/Example2/hello -d '{
     name: "hello"
 }'
 ```
-
-
 
