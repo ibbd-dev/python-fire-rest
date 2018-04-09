@@ -15,40 +15,45 @@ app = Flask(__name__)
 
 # ctroller action list
 action_list = {}
+action_names = []  # 用于输出帮助信息
 
 config = {
-    "debug": False
+    "debug": False,
+    "version": 'v1.0',
 }
 
 
 def API(ctrl):
     """将函数或者类转化为添加Restful API
     Args:
-        ctrl function|class 需要转化的函数或者类
+        ctrl: function|class 需要转化的函数或者类
     """
-    global action_list
+    global action_list, action_names
 
     ctrl_name = ctrl.__name__
     if type(ctrl) is types.FunctionType:  # 函数
         key = (ctrl_name)
         action_list[key] = ctrl
+        action_names.append(['/'+ctrl_name, get_func_help(ctrl)])
         return
 
     logger.warning(ctrl_name)
     obj = ctrl()
 
-    for func in ctrl.__dict__:
-        if func[:1] == "_":
+    for func_name in ctrl.__dict__:
+        if func_name[:1] == "_":
             continue
 
-        key = (ctrl_name, func)
-        action_list[key] = getattr(obj, func)
+        key = (ctrl_name, func_name)
+        action_list[key] = getattr(obj, func_name)
+        action_names.append(['/'+ctrl_name+'/'+func_name, get_func_help(action_list[key])])
 
 
-def run(port=20920, debug=False):
+def run(port=20920, debug=False, version='v1.0'):
     """运行服务"""
     global config
     config["debug"] = debug
+    config["version"] = version
     app.run(port=port, debug=debug)
     app.logger.addHandler(logger)
 
@@ -60,6 +65,15 @@ def output_json(data, code=0, messages=None):
         "messages": messages,
         "data": data
     })
+
+
+@app.route('/', methods=['GET'])
+def getRootHelp():
+    """帮助文档"""
+    msg_help = "<pre>API Version " + config['version']
+    msg_help += "\n\nSupport Functions:\n\t" + "\n\t".join([a[0]+"\t"+a[1] for a in action_names])
+    msg_help += "\n\nThe help of functions:\n\t" + "\n\t".join([a[0]+'?help=true' for a in action_names])
+    return msg_help
 
 
 @app.route('/<string:func_name>', methods=['POST'])
@@ -127,5 +141,18 @@ def parse_get(func):
 
 def print_func_help(func):
     """打印函数的帮助信息"""
-    msg_help = '' if func.__doc__ == None else func.__doc__
-    return "<pre>"+msg_help+"</pre>"
+    msg_help = '' if func.__doc__ is None else func.__doc__.strip()
+    return "<pre>"+msg_help
+
+
+def get_func_help(func):
+    """获取函数帮助信息的第一行"""
+    if func.__doc__ is None:
+        return ''
+    msg = func.__doc__.split("\n")
+    msg[0] = msg[0].strip()
+    if len(msg[0]) > 0:
+        return msg[0]
+    if len(msg) > 1:
+        return msg[1].strip()
+    return ''

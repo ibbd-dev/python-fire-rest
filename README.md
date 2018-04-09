@@ -42,6 +42,22 @@ run(debug=True)       # 启动
 
 另外，还可以也可以将多个函数或者多个类封装成http接口，具体可以看下面的Example。
 
+## Help
+服务启动之后，查看帮助文档非常简单，只需要在浏览器访问：`localhost:20920`，将会看到如下格式的内容：
+
+```
+API Version v1.0
+
+Support Functions:
+	/Example/hello	这是Example的hello帮助文档
+	/Example2/hello	这是Example2的hello帮助文档
+
+The help of functions:
+	/Example/hello?help=true
+	/Example2/hello?help=true
+```
+
+可以看到接口的版本号，支持的函数列表，以及怎么查看函数的帮助内容等。
 
 ## Example01: 最简单的服务
 把一个函数包装成HTTP Restful API服务：
@@ -175,6 +191,6 @@ curl -XPOST localhost:20920/Example2/hello -d '{
 
 ## TODO
 
-- [ ] 帮助文档完善
+- [x] 帮助文档完善
 - [ ] 函数参数类型校验
-- [ ] 
+- [x] API版本信息
