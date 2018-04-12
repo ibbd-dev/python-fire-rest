@@ -72,8 +72,14 @@ def _output_json(data, code=0, messages=None):
 @app.route('/', methods=['GET'])
 def getRootHelp():
     """帮助文档"""
+    max_l = 0
+    for a in action_names:
+        if len(a[0]) > max_l:
+            max_l = len(a[0])
+
+    max_l += 4
     msg_help = "<pre>API Version " + config['version']
-    msg_help += "\n\nSupport Functions:\n\t" + "\n\t".join([a[0]+"\t"+a[1] for a in action_names])
+    msg_help += "\n\nSupport Functions:\n\t" + "\n\t".join([a[0]+(" "*(max_l-len(a[0])))+a[1] for a in action_names])
     msg_help += "\n\nThe help of functions:\n\t" + "\n\t".join([a[0]+'?help=true' for a in action_names])
     return msg_help
 
