@@ -7,6 +7,7 @@ import logging
 import types
 from flask import Flask, jsonify
 from flask_restful import request
+from .storage import storage
 
 __all__ = ['API', 'run']
 
@@ -24,6 +25,7 @@ config = {
 }
 
 
+
 def API(ctrl):
     """将函数或者类转化为添加Restful API
     Args:
@@ -36,6 +38,7 @@ def API(ctrl):
         key = (ctrl_name)
         action_list[key] = ctrl
         action_names.append(['/'+ctrl_name, _get_func_help(ctrl)])
+        storage.init_func(ctrl_name)
         return
 
     logger.warning(ctrl_name)
@@ -46,18 +49,26 @@ def API(ctrl):
             continue
 
         key = (ctrl_name, func_name)
+        storage.init_func(func_name, ctrl_name)
         action_list[key] = getattr(obj, func_name)
         action_names.append(['/'+ctrl_name+'/'+func_name, _get_func_help(action_list[key])])
 
 
-def run(port=20920, debug=False, version='v1.0', output_json=True):
-    """运行服务"""
+def run(port=20920, save_path='/var/www/model', debug=False, version='v1.0'):
+    """运行服务
+    Args:
+        port: 服务运行的端口号，不能跟系统其他服务的有冲突
+        save_path: 模型在保存时的存储路径
+        debug: 测试标识，测试状态下会输出更多的日志
+        version: 服务的版本号，这个信息会在帮助信息输出
+    """
     global config
     config["debug"] = debug
     config["version"] = version
-    config["output_json"] = output_json
+    config["output_json"] = True
     app.run(port=port, debug=debug, host='0.0.0.0')
     app.logger.addHandler(logger)
+    storage.init(save_path)
 
 
 def _output_json(data, code=0, messages=None):
@@ -84,9 +95,12 @@ def getRootHelp():
     return msg_help
 
 
-@app.route('/<string:func_name>', methods=['POST'])
-def restFunc(func_name):
+@app.route('/<string:func_name>/<string:model_action>', methods=['POST'])
+def restFunc(func_name, model_action):
     """函数API入口"""
+    if not _check_model_action(model_action):
+        return 'error model action = %s' % model_action, 404
+
     key = (func_name)
     if key not in action_list:
         return "not found!", 404
@@ -108,9 +122,12 @@ def getRestFunc(func_name):
     return _parse_get(func)
 
 
-@app.route('/<string:ctrl>/<string:action>', methods=['POST'])
-def restClass(ctrl, action):
+@app.route('/<string:ctrl>/<string:action>/<string:model_action>', methods=['POST'])
+def restClass(ctrl, action, model_action):
     """类API入口"""
+    if not _check_model_action(model_action):
+        return 'error model action = %s' % model_action, 404
+
     key = (ctrl, action)
     if key not in action_list:
         return "not found!", 404
@@ -130,6 +147,12 @@ def getRestClass(ctrl, action):
 
     func = action_list[key]
     return _parse_get(func)
+
+
+def _check_model_action(action):
+    if action in ['train', 'test', 'predict']:
+        return True
+    return False
 
 
 def _parse_post(func):
