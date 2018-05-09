@@ -3,8 +3,8 @@
 # 包装API
 # Author: alex
 # Created Time: 2018年04月02日 星期一 14时34分24秒
-import logging
 import types
+import logging
 from flask import Flask, jsonify
 from flask_restful import request
 from .storage import storage
@@ -23,7 +23,6 @@ config = {
     "version": 'v1.0',
     "output_json": True,
 }
-
 
 
 def API(ctrl):

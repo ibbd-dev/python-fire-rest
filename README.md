@@ -9,6 +9,75 @@
 python setup.py install
 ```
 
+## 关于模型算法的使用说明
+模型算法可以分为两类：
+
+### 1. 不需要训练的算法
+例如k-均值聚类算法等，不需要训练过程，每次直接调用即可，使用上也很简单：
+
+```python
+API(func_name)    # 这里func_name就是算法的函数
+```
+
+### 2. 需要训练过程的算法
+大多数模型算法，都可以划分为训练，测试和预测这三个步骤。使用的步骤如下：
+
+1. 需要将算法实现成一个类，并且该类的基类必须是Model
+2. 训练，测试和预测对应的方法名必须是train, test, predict。不允许使用其他的名字
+3. 训练好的模型可以调用save进行保存，在test和predict中，调用load来加载模型
+4. train和predict这两个方法必须要实现
+
+具体样例如下：
+
+```python
+from fireRest import Model
+from sklearn.linear_model import LogisticRegression
+
+
+class logisticLinear(Model):
+    """logistic线性模型"""
+
+    def train(self, X, y, model_name, penalty='l2'):
+        """logistic回归模型
+
+        Args:
+            X: list, 自变量，值如：[[0, 0], [1, 1], [2, 2]]
+            y: list, 因变量，值如：[0, 1, 2]
+            penalty: str, 惩罚项，默认为l2，支持取值：l1, l2
+
+        Returns:
+            coef: list, 线性模型的系数
+
+        Examples:
+            curl -XPOST localhost:20920/linear/logistic -d '{"X": [[0, 0], [1, 1], [2, 2]], "y": [0, 1, 2]}'
+            注意：这里localhost需要换成实际的host
+        """
+        lr = LogisticRegression(penalty=penalty)
+        lr.fit(X, y)
+        self.save(lr, model_name)
+        return {
+            'coef': lr.coef_.tolist(),
+        }
+
+    def test(self, X, y, model_name):
+        """模型测试"""
+        model = self.load(model_name)
+        predict_y = model.predict(X)
+        return {
+            "predict_y": predict_y
+        }
+
+    def predict(self, X, model_name):
+        """模型预测"""
+        model = self.load(model_name)
+        predict_y = model.predict(X)
+        return {
+            "predict_y": predict_y
+        }
+```
+
+
+
 ## Usage
 假设你实现的函数名是：`func_name`，将它封装成http服务如下：
 
