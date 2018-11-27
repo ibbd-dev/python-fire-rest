@@ -25,7 +25,7 @@ DEPENDENCIES = [
     'flask_restful',
 ]
 
-VERSION = '0.2.1'
+VERSION = '0.2.2'
 URL = 'https://github.com/ibbd-dev/python-fire-rest'
 
 setup(
