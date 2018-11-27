@@ -8,10 +8,12 @@ import types
 from flask import Flask, jsonify
 from flask_restful import request
 
-__all__ = ['API', 'run']
+__all__ = ['API', 'set_app']
 
 logger = logging.getLogger()
 app = Flask(__name__)
+app.logger.addHandler(logger)
+app.config['JSON_AS_ASCII'] = False
 
 # ctroller action list
 action_list = {}
@@ -50,14 +52,12 @@ def API(ctrl):
         action_names.append(['/'+ctrl_name+'/'+func_name, _get_func_help(action_list[key])])
 
 
-def run(port=20920, debug=False, version='v1.0', output_json=True):
+def set_app(debug=False, version='v1.0', output_json=True):
     """运行服务"""
     global config
     config["debug"] = debug
     config["version"] = version
     config["output_json"] = output_json
-    app.run(port=port, debug=debug, host='0.0.0.0')
-    app.logger.addHandler(logger)
 
 
 def _output_json(data, code=0, messages=None):
