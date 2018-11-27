@@ -22,10 +22,11 @@ A library for automatically generating restful api interfaces.""".strip()
 
 DEPENDENCIES = [
     'flask',
+    'jsonschema',
     'flask_restful',
 ]
 
-VERSION = '0.2.2'
+VERSION = '0.3.0'
 URL = 'https://github.com/ibbd-dev/python-fire-rest'
 
 setup(

@@ -15,10 +15,11 @@ pip3 install git+https://github.com/ibbd-dev/python-fire-rest.git
 假设你实现的函数名是：`func_name`，将它封装成http服务如下：
 
 ```python
-from fireRest import API, run
+from fireRest import API, set_app, app
 
-API(func_name)        # 将func_name这个函数包装成服务
-run(debug=True)       # 启动
+API(func_name)            # 将func_name这个函数包装成服务
+set_app(debug=True)       # 启动
+app.run(port=20920)
 ```
 
 这样就启动了一个http服务，默认端口号为`20920`，访问地址为：`localhost:20920/func_name`，接口参数使用post方式提交，json格式。例如如下：
@@ -29,15 +30,16 @@ curl -XPOST localhost:20920/func_name -d '{
 }'
 ```
 
-如果需要改用其他的端口，可以使用run函数的port参数，例如：`run(port=8080)`，这样就将端口改成了8080。
+如果需要改用其他的端口，可以使用run函数的port参数，例如：`app.run(port=8080)`，这样就将端口改成了8080。
 
 同理也可以将一个类包装成HTTP服务，例如：
 
 ```python
-from fireRest import API, run
+from fireRest import API, set_app, app
 
 API(class_name)       # 将class_name这个类包装成服务
-run(debug=True)       # 启动
+set_app(debug=True)       # 启动
+app.run(port=20920)
 ```
 
 使用上和函数基本一样，只是访问的地址变为：`localhost:20920/class_name/action_name`，这里的`action_name`指定访问方法的名字。
@@ -84,7 +86,7 @@ The help of functions:
 
 ```python
 #!/usr/bin/env python
-from fireRest import API, run
+from fireRest import API, set_app, app
 
 def hello(name='world'):
     """这是帮助函数
@@ -98,7 +100,8 @@ def hello(name='world'):
 
 if __name__ == '__main__':
     API(hello)        # 将hello这个函数包装成服务
-    run(debug=True)   # 启动
+    set_app(debug=True)   # 启动
+    app.run(port=20920)
 ```
 
 以上代码在运行之后，就会启动一个http的服务，默认监听端口为`20920`，可以如下访问：
@@ -131,7 +134,7 @@ curl -XPOST localhost:20920/hello -d '{
 除了函数，类也可以包装成API服务:
 
 ```python
-from fireRest import API, run
+from fireRest import API, set_app, app
 
 class Example:
     def hello(self, name='world'):
@@ -139,7 +142,8 @@ class Example:
 
 if __name__ == '__main__':
     API(Example)
-    run(debug=True)
+    set_app(debug=True)   # 启动
+    app.run(port=20920)
 ```
 
 访问也类似，只需要加上相应的类名：
@@ -158,7 +162,7 @@ curl -XPOST localhost:20920/Example/hello -d '{
 很简单，基于Example02的基础上，只要使用output_json进行返回即可，如下：
 
 ```python
-from fireRest import API, run, output_json
+from fireRest import API, set_app, app, output_json
 
 class Example:
     def hello(self, name='world'):
@@ -179,7 +183,7 @@ class Example:
 
 
 ```python
-from fireRest import API, run, output_json
+from fireRest import API, set_app, app, output_json
 
 class Example:
     def hello(self, name='world'):
@@ -192,7 +196,7 @@ class Example2:
 if __name__ == '__main__':
     API(Example)
     API(Example2)
-    run(debug=True)
+    app.run(debug=True)
 ```
 
 分别执行以下两个命令就能看到不同的输出：

@@ -7,8 +7,10 @@ import logging
 import types
 from flask import Flask, jsonify
 from flask_restful import request
+from traceback import format_exc
+from jsonschema.exceptions import ValidationError
 
-__all__ = ['API', 'set_app']
+__all__ = ['API', 'set_app', 'app', 'APIException']
 
 logger = logging.getLogger()
 app = Flask(__name__)
@@ -24,6 +26,40 @@ config = {
     "version": 'v1.0',
     "output_json": True,
 }
+
+
+class APIException(Exception):
+    def __init__(self, messages, code=1):
+        """
+        Args:
+            msg: 错误信息
+            code: 错误代码
+        """
+        self._code = code
+        super(Exception, self).__init__(messages)
+
+    @property
+    def code(self):
+        return self._code
+
+
+@app.errorhandler(APIException)
+def err_handler_model(e):
+    logger.exception(e)
+    return _output_json(None, code=e.code, messages=str(e))
+
+
+@app.errorhandler(ValidationError)
+def err_handler_valid(e):
+    logger.exception(e)
+    return _output_json(None, code=2, messages=str(e))
+
+
+@app.errorhandler(Exception)
+def err_handler_internal(e):
+    logger.exception(e)
+    msg = str(e) + "\n" + format_exc() if config['debug'] else str(e)
+    return _output_json(None, code=1, messages=msg)
 
 
 def API(ctrl):
