@@ -1,12 +1,14 @@
 # python-fire-rest
-快速包装Rest API服务，参考Google的Python Fire实现
+快速将多个函数或者类包装Rest API服务，参考Google的Python Fire实现
 
-说明：在Python3.5下测试通过。
+说明：在Python3.6下测试通过。
 
 ## Install
 
 ```sh
 python setup.py install
+
+pip3 install -r requirements.txt
 
 pip3 install git+https://github.com/ibbd-dev/python-fire-rest.git
 ```
@@ -213,8 +215,36 @@ curl -XPOST localhost:20920/Example2/hello -d '{
 }'
 ```
 
+## 异常处理
+
+```python
+from fireRest import API, app, APIException
+
+def hello(name='world'):
+    if name == 'exception':
+        raise APIException('演示错误处理的使用方式',
+                           code=100)
+    return 'Hello {name} in func!'.format(name=name)
+
+if __name__ == '__main__':
+    API(hello)
+    app.run(debug=True)
+```
+
+使用非常简单，只要引入`APIException`类即可。上例演示只要输入的name参数值为`exception`就会触发异常返回，如下：
+
+```sh
+curl -XPOST localhost:5000/hello -d '{"name": "exception"}'
+{
+  "code": 100, 
+  "data": null, 
+  "messages": "演示错误处理的使用方式"
+}
+```
+
 ## TODO
 
 - [x] 帮助文档完善
-- [ ] 函数参数类型校验
 - [x] API版本信息
+- [x] 统一的异常处理
+- [ ] 函数参数类型校验

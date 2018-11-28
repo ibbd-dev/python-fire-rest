@@ -74,11 +74,13 @@ def API(ctrl):
         key = (ctrl_name)
         action_list[key] = ctrl
         action_names.append(['/'+ctrl_name, _get_func_help(ctrl)])
+        print('Add Function: ', ctrl_name)
         return
 
     logger.warning(ctrl_name)
     obj = ctrl()
 
+    print('Add Class: ', ctrl_name)
     for func_name in ctrl.__dict__:
         if func_name[:1] == "_":
             continue
@@ -86,6 +88,7 @@ def API(ctrl):
         key = (ctrl_name, func_name)
         action_list[key] = getattr(obj, func_name)
         action_names.append(['/'+ctrl_name+'/'+func_name, _get_func_help(action_list[key])])
+        print('---> Method: ', func_name)
 
 
 def set_app(debug=False, version='v1.0', output_json=True):
