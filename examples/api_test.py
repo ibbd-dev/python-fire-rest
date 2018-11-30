@@ -3,7 +3,7 @@
 # 使用测试
 # Author: alex
 # Created Time: 2018年04月02日 星期一 14时53分50秒
-from fireRest import API, app, APIException
+from fireRest import API, app, APIException, ErrCodeBase
 
 
 class Example:
@@ -19,7 +19,7 @@ class Example2:
 def hello(name='world'):
     if name == 'exception':
         raise APIException('演示错误处理的使用方式',
-                           code=100)
+                           code=ErrCodeBase.err_param)
     return 'Hello {name} in func!'.format(name=name)
 
 

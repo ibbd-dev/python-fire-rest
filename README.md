@@ -218,12 +218,12 @@ curl -XPOST localhost:20920/Example2/hello -d '{
 ## 异常处理
 
 ```python
-from fireRest import API, app, APIException
+from fireRest import API, app, APIException, ErrCodeBase
 
 def hello(name='world'):
     if name == 'exception':
         raise APIException('演示错误处理的使用方式',
-                           code=100)
+                           code=ErrCodeBase.err_param)
     return 'Hello {name} in func!'.format(name=name)
 
 if __name__ == '__main__':
@@ -241,6 +241,8 @@ curl -XPOST localhost:5000/hello -d '{"name": "exception"}'
   "messages": "演示错误处理的使用方式"
 }
 ```
+
+说明：实际使用的时候，可以继承`ErrCodeBase`，来定义自有的错误代码。
 
 ## TODO
 
