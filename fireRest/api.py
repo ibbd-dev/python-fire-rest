@@ -9,8 +9,9 @@ from flask import Flask, jsonify
 from flask_restful import request
 from traceback import format_exc
 from jsonschema.exceptions import ValidationError
+from .exception import ErrCodeBase, APIException
 
-__all__ = ['API', 'set_app', 'app', 'APIException']
+__all__ = ['API', 'set_app', 'app']
 
 logger = logging.getLogger()
 app = Flask(__name__)
@@ -28,21 +29,6 @@ config = {
 }
 
 
-class APIException(Exception):
-    def __init__(self, messages, code=1):
-        """
-        Args:
-            msg: 错误信息
-            code: 错误代码
-        """
-        self._code = code
-        super(Exception, self).__init__(messages)
-
-    @property
-    def code(self):
-        return self._code
-
-
 @app.errorhandler(APIException)
 def err_handler_model(e):
     logger.exception(e)
@@ -52,14 +38,14 @@ def err_handler_model(e):
 @app.errorhandler(ValidationError)
 def err_handler_valid(e):
     logger.exception(e)
-    return _output_json(None, code=2, messages=str(e))
+    return _output_json(None, code=ErrCodeBase.err_param, messages=str(e))
 
 
 @app.errorhandler(Exception)
 def err_handler_internal(e):
     logger.exception(e)
     msg = str(e) + "\n" + format_exc() if config['debug'] else str(e)
-    return _output_json(None, code=1, messages=msg)
+    return _output_json(None, code=ErrCodeBase.unknown, messages=msg)
 
 
 def API(ctrl):
