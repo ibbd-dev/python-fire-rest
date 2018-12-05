@@ -5,6 +5,7 @@
 # Created Time: 2018年04月02日 星期一 14时34分24秒
 import logging
 import types
+from time import time
 from flask import Flask, jsonify
 from flask_restful import request
 from traceback import format_exc
@@ -25,7 +26,6 @@ action_names = []  # 用于输出帮助信息
 config = {
     "debug": False,
     "version": 'v1.0',
-    "output_json": True,
 }
 
 
@@ -56,16 +56,15 @@ def API(ctrl):
     global action_list, action_names
 
     ctrl_name = ctrl.__name__
-    if type(ctrl) is types.FunctionType:  # 函数
+    if isinstance(ctrl, types.FunctionType):  # 函数
         key = (ctrl_name)
         action_list[key] = ctrl
         action_names.append(['/'+ctrl_name, _get_func_help(ctrl)])
         print('Add Function: ', ctrl_name)
         return
 
-    logger.warning(ctrl_name)
     obj = ctrl()
-
+    logger.warning(ctrl_name)
     print('Add Class: ', ctrl_name)
     for func_name in ctrl.__dict__:
         if func_name[:1] == "_":
@@ -77,21 +76,27 @@ def API(ctrl):
         print('---> Method: ', func_name)
 
 
-def set_app(debug=False, version='v1.0', output_json=True):
-    """运行服务"""
+def set_app(debug: bool = False, version='v1.0'):
+    """运行服务
+    Args:
+        debug: 当该值为True时，会增加异常信息输出，会自动计算接口耗时等
+    """
     global config
     config["debug"] = debug
     config["version"] = version
-    config["output_json"] = output_json
 
 
-def _output_json(data, code=0, messages=None):
+def _output_json(data, code=0, messages=None, start=None):
     """以json结构返回数据"""
-    return jsonify({
+    res = {
         "code": code,
         "messages": messages,
-        "data": data
-    })
+        "data": data,
+    }
+    if start is None:
+        res['time'] = time() - start
+
+    return jsonify(res)
 
 
 @app.route('/', methods=['GET'])
@@ -116,10 +121,9 @@ def restFunc(func_name):
     if key not in action_list:
         return "not found!", 404
 
+    start = None if config['debug'] is False else time()
     res = _parse_post(action_list[key])
-    if config['output_json']:
-        return _output_json(res)
-    return res
+    return _output_json(res, start=start)
 
 
 @app.route('/<string:func_name>', methods=['GET'])
@@ -140,10 +144,9 @@ def restClass(ctrl, action):
     if key not in action_list:
         return "not found!", 404
 
+    start = None if config['debug'] is False else time()
     res = _parse_post(action_list[key])
-    if config['output_json']:
-        return _output_json(res)
-    return res
+    return _output_json(res, start=start)
 
 
 @app.route('/<string:ctrl>/<string:action>', methods=['GET'])
@@ -158,6 +161,7 @@ def getRestClass(ctrl, action):
 
 
 def _parse_post(func):
+    """执行相应的函数"""
     params = request.get_json(force=True, silent=True)
     if config["debug"]:
         logger.warning("function: " + func.__name__)
