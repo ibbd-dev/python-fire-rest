@@ -93,7 +93,7 @@ def _output_json(data, code=0, messages=None, start=None):
         "messages": messages,
         "data": data,
     }
-    if start is None:
+    if start is not None:
         res['time'] = time() - start
 
     return jsonify(res)
