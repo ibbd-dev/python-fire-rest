@@ -17,10 +17,9 @@ pip3 install git+https://github.com/ibbd-dev/python-fire-rest.git
 假设你实现的函数名是：`func_name`，将它封装成http服务如下：
 
 ```python
-from fireRest import API, set_app, app
+from fireRest import API, app
 
 API(func_name)            # 将func_name这个函数包装成服务
-set_app(debug=True)       # 启动
 app.run(port=20920)
 ```
 
@@ -37,10 +36,9 @@ curl -XPOST localhost:20920/func_name -d '{
 同理也可以将一个类包装成HTTP服务，例如：
 
 ```python
-from fireRest import API, set_app, app
+from fireRest import API, app
 
 API(class_name)       # 将class_name这个类包装成服务
-set_app(debug=True)       # 启动
 app.run(port=20920)
 ```
 
@@ -88,7 +86,7 @@ The help of functions:
 
 ```python
 #!/usr/bin/env python
-from fireRest import API, set_app, app
+from fireRest import API, app
 
 def hello(name='world'):
     """这是帮助函数
@@ -102,7 +100,6 @@ def hello(name='world'):
 
 if __name__ == '__main__':
     API(hello)        # 将hello这个函数包装成服务
-    set_app(debug=True)   # 启动
     app.run(port=20920)
 ```
 
@@ -136,7 +133,7 @@ curl -XPOST localhost:20920/hello -d '{
 除了函数，类也可以包装成API服务:
 
 ```python
-from fireRest import API, set_app, app
+from fireRest import API, app
 
 class Example:
     def hello(self, name='world'):
@@ -144,7 +141,6 @@ class Example:
 
 if __name__ == '__main__':
     API(Example)
-    set_app(debug=True)   # 启动
     app.run(port=20920)
 ```
 
@@ -164,7 +160,7 @@ curl -XPOST localhost:20920/Example/hello -d '{
 很简单，基于Example02的基础上，只要使用output_json进行返回即可，如下：
 
 ```python
-from fireRest import API, set_app, app, output_json
+from fireRest import API, app, output_json
 
 class Example:
     def hello(self, name='world'):
@@ -185,7 +181,7 @@ class Example:
 
 
 ```python
-from fireRest import API, set_app, app, output_json
+from fireRest import API, app, output_json
 
 class Example:
     def hello(self, name='world'):
