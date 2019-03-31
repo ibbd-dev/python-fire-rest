@@ -24,6 +24,7 @@ DEPENDENCIES = [
     'flask',
     'jsonschema',
     'flask_restful',
+    'json-tricks',
 ]
 
 VERSION = '0.3.3'
