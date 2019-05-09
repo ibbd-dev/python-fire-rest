@@ -2,3 +2,4 @@ flask
 flask_restful
 jsonschema
 json-tricks
+flask_cors

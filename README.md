@@ -245,4 +245,6 @@ curl -XPOST localhost:5000/hello -d '{"name": "exception"}'
 - [x] 帮助文档完善
 - [x] API版本信息
 - [x] 统一的异常处理
+- [x] 设置上传大小: set_upload_size(size)
+- [x] 设置跨域: set_cors
 - [ ] 函数参数类型校验

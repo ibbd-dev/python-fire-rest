@@ -86,6 +86,17 @@ def set_app(debug: bool = False, version='v1.0'):
     config["version"] = version
 
 
+def set_cors():
+    global app
+    from flask_cors import CORS
+    CORS(app, supports_credentials=True)
+
+
+def set_upload_size(size):
+    global app
+    app.config['MAX_CONTENT_LENGTH'] = size
+
+
 def _output_json(data, code=0, messages=None, start=None):
     """以json结构返回数据"""
     res = {
