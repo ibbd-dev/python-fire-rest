@@ -10,7 +10,7 @@ python setup.py install
 
 pip3 install -r requirements.txt
 
-pip3 install git+https://github.com/ibbd-dev/python-fire-rest.git
+pip3 install -U git+https://github.com/ibbd-dev/python-fire-rest.git
 ```
 
 ## Usage
