@@ -6,10 +6,13 @@
 ## Install
 
 ```sh
-python setup.py install
-
+# 安装依赖
 pip3 install -r requirements.txt
 
+# 源码安装
+python setup.py install
+
+# 使用pip安装
 pip3 install -U git+https://github.com/ibbd-dev/python-fire-rest.git
 ```
 
@@ -17,6 +20,7 @@ pip3 install -U git+https://github.com/ibbd-dev/python-fire-rest.git
 假设你实现的函数名是：`func_name`，将它封装成http服务如下：
 
 ```python
+# app其实就是Flask对象
 from fireRest import API, app
 
 API(func_name)            # 将func_name这个函数包装成服务
@@ -61,7 +65,7 @@ app.run(port=20920)
 
 - code: 接口的请求状态码，0表示成功，非0表示失败
 - data: 接口的返回内容，可以是各种类型
-- message: 提示信息，帮助信息等内容
+- messages: 提示信息，帮助信息等内容
 
 
 ## Help
@@ -85,7 +89,6 @@ The help of functions:
 把一个函数包装成HTTP Restful API服务：
 
 ```python
-#!/usr/bin/env python
 from fireRest import API, app
 
 def hello(name='world'):
@@ -116,7 +119,7 @@ curl -XPOST localhost:20920/hello -d '{
 ### 查看函数的帮助文档
 对于上面的函数hello，如果想查询其帮助文档，只需要在请求的url上增加`help=true`参数即可，例如可以在浏览器上直接打开该地址：`localhost:20920/hello?help=true`
 
-其输入如下：
+其输出如下：
 
 ```
 这是帮助函数
@@ -238,7 +241,42 @@ curl -XPOST localhost:5000/hello -d '{"name": "exception"}'
 }
 ```
 
-说明：实际使用的时候，可以继承`ErrCodeBase`，来定义自有的错误代码。
+说明：实际使用的时候，可以继承[`APIException`](/fireRest/exception.py)类，来定义自有的错误代码。
+
+在异常处理的时候，也可以直接使用内置的Exception，如：
+
+```python
+from fireRest import API, app
+
+def hello(name='world'):
+    if name == 'exception':
+        raise Exception('演示错误处理的使用方式')
+    return 'Hello {name} in func!'.format(name=name)
+
+if __name__ == '__main__':
+    API(hello)
+    app.run(debug=True)
+```
+
+返回值：
+
+```sh
+curl -XPOST localhost:5000/hello -d '{"name": "exception"}'
+{
+  "code": 1, 
+  "data": null, 
+  "messages": "演示错误处理的使用方式"
+}
+```
+
+## 其他功能
+
+- 设置跨域
+- 设置上传文件大小
+
+```python
+from fireRest import set_cors, set_upload_size
+```
 
 ## TODO
 
