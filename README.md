@@ -17,6 +17,9 @@ pip3 install -U git+https://github.com/ibbd-dev/python-fire-rest.git
 ```
 
 ## Usage
+完整的使用案例：[api_test.py](/examples/api_test.py)
+
+
 假设你实现的函数名是：`func_name`，将它封装成http服务如下：
 
 ```python
@@ -241,7 +244,7 @@ curl -XPOST localhost:5000/hello -d '{"name": "exception"}'
 }
 ```
 
-说明：实际使用的时候，可以继承[`APIException`](/fireRest/exception.py)类，来定义自有的错误代码。
+说明：实际使用的时候，可以直接使用[`APIException`](/fireRest/exception.py)类，允许自定义错误码。
 
 在异常处理的时候，也可以直接使用内置的Exception，如：
 
