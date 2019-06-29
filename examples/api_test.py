@@ -8,25 +8,33 @@ from fireRest import API, app, APIException, ErrCodeBase
 
 class Example:
     def hello(self, name='world'):
+        """这是函数的注释"""
         if name == 'exception':
             # 可以简单的抛出异常（此时错误码为1）
             raise Exception('演示异常输出')
-        return 'Hello {name} in Example!'.format(name=name)
+        # 可以返回字典
+        return {
+            "msg": 'Hello {name} in Example!'.format(name=name)
+        }
 
 
 class Example2:
     def hello(self, name='world'):
+        """这是函数的注释"""
         if name == 'exception':
             # 可以使用自定义的错误码
             raise APIException('演示错误处理的使用方式', code=10)
-        return 'Hello {name} in Example2!'.format(name=name)
+        # 可以返回列表
+        return ['Hello {name} in Example2!'.format(name=name)]
 
 
 def hello(name='world'):
+    """这是函数的注释"""
     if name == 'exception':
         # 可以使用系统定义的错误码
         raise APIException('演示错误处理的使用方式',
                            code=ErrCodeBase.err_param)
+    # 可以返回简单类型，如字符串等
     return 'Hello {name} in func!'.format(name=name)
 
 

@@ -34,7 +34,7 @@ app.run(port=20920)
 
 ```sh
 curl -XPOST localhost:20920/func_name -d '{
-    name: "hello"
+    "name": "hello"
 }'
 ```
 
@@ -113,7 +113,7 @@ if __name__ == '__main__':
 
 ```sh
 curl -XPOST localhost:20920/hello -d '{
-    name: "hello"
+    "name": "hello"
 }'
 ```
 
@@ -154,7 +154,7 @@ if __name__ == '__main__':
 
 ```sh
 curl -XPOST localhost:20920/Example/hello -d '{
-    name: "hello"
+    "name": "hello"
 }'
 ```
 
@@ -208,12 +208,12 @@ if __name__ == '__main__':
 ```sh
 # 执行Example中的方法
 curl -XPOST localhost:20920/Example/hello -d '{
-    name: "hello"
+    "name": "hello"
 }'
 
 # 执行Example2中的方法
 curl -XPOST localhost:20920/Example2/hello -d '{
-    name: "hello"
+    "name": "hello"
 }'
 ```
 
