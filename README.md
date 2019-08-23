@@ -1,5 +1,5 @@
 # python-fire-rest
-快速将多个函数或者类包装Rest API服务，参考Google的Python Fire实现
+快速将多个函数或者类包装Rest API服务，参考[Google的Python Fire](https://github.com/google/python-fire)实现
 
 说明：在Python3.6下测试通过。
 
@@ -288,4 +288,5 @@ from fireRest import set_cors, set_upload_size
 - [x] 统一的异常处理
 - [x] 设置上传大小: set_upload_size(size)
 - [x] 设置跨域: set_cors
+- [ ] 接口缓存
 - [ ] 函数参数类型校验

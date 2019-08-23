@@ -133,7 +133,7 @@ def restFunc(func_name):
         return "not found!", 404
 
     start = None if config['debug'] is False else time()
-    res = _parse_post(action_list[key])
+    res = _parse_post(key)
     return _output_json(res, start=start)
 
 
@@ -156,7 +156,7 @@ def restClass(ctrl, action):
         return "not found!", 404
 
     start = None if config['debug'] is False else time()
-    res = _parse_post(action_list[key])
+    res = _parse_post(key)
     return _output_json(res, start=start)
 
 
@@ -171,16 +171,20 @@ def getRestClass(ctrl, action):
     return _parse_get(func)
 
 
-def _parse_post(func):
+def _parse_post(key):
     """执行相应的函数"""
+    func = action_list[key]
     params = request.get_json(force=True, silent=True)
     if config["debug"]:
         logger.warning("function: " + func.__name__)
         logger.warning(params)
 
     if params:
-        return func(**request.json)
-    return func()
+        res = func(**request.json)
+    else:
+        res = func()
+
+    return res
 
 
 def _parse_get(func):
