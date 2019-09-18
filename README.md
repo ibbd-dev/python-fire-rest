@@ -11,9 +11,6 @@ pip3 install -r requirements.txt
 
 # 源码安装
 python setup.py install
-
-# 使用pip安装
-pip3 install -U git+https://github.com/ibbd-dev/python-fire-rest.git
 ```
 
 ## Usage
@@ -272,6 +269,18 @@ curl -XPOST localhost:5000/hello -d '{"name": "exception"}'
 }
 ```
 
+## 心跳服务
+用于判断服务是否正常运行。
+
+```sh
+curl localhost:5000/heartbeat
+{
+  "code": 0,         # 该值为0则表示服务正常
+  "messages": ""
+}
+```
+
+
 ## 其他功能
 
 - 设置跨域
@@ -290,3 +299,4 @@ from fireRest import set_cors, set_upload_size
 - [x] 设置跨域: set_cors
 - [ ] 接口缓存
 - [ ] 函数参数类型校验
+- [x] 服务心跳服务
