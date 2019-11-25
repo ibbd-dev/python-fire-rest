@@ -272,14 +272,57 @@ curl -XPOST localhost:5000/hello -d '{"name": "exception"}'
 }
 ```
 
+## 上传文件
+需要上传文件时，可以如下使用
+
+```python
+from flask import request
+
+def upload():
+    """上传文件
+    注意：上传文件时使用multipart/form-data，不能在函数名upload增加参数，否则会报错
+    """
+    ufile = request.files.get('file')   # 文件对象
+    return {
+        "file": ufile.filename,
+    }
+```
+
+接口请求样例：
+
+```sh
+curl -XPOST localhost:5000/upload -F 'file=@README.md'
+
+## 返回值
+{
+  "code": 0,
+  "data": {
+    "file": "README.md"
+  },
+  "messages": null
+}
+```
+
+
+
+如果需要设置上传文件的大小，可以使用下面的方法：
+
+```python
+from fireRest import set_upload_size
+
+set_upload_size(1024*1024*10)     # 10MB
+```
+
 ## 其他功能
 
 - 设置跨域
-- 设置上传文件大小
+- 设置上传文件或者请求体的大小
+- 设置其他的flask参数
 
 ```python
-from fireRest import set_cors, set_upload_size
+from fireRest import set_cors, set_upload_size, set_param
 ```
+
 
 ## TODO
 

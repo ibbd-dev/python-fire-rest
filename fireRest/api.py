@@ -93,8 +93,18 @@ def set_cors():
 
 
 def set_upload_size(size):
+    """设置body大小
+    如：1024*1024*2 = 2MB"""
     global app
     app.config['MAX_CONTENT_LENGTH'] = size
+
+
+def set_param(key, val):
+    """设置flask参数
+    http://docs.jinkan.org/docs/flask/config.html
+    """
+    global app
+    app.config[key] = val
 
 
 def _output_json(data, code=0, messages=None, start=None):

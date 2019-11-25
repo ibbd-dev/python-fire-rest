@@ -3,6 +3,7 @@
 # 使用测试
 # Author: alex
 # Created Time: 2018年04月02日 星期一 14时53分50秒
+from flask import request
 from fireRest import API, app, APIException, ErrCodeBase
 
 
@@ -38,6 +39,16 @@ def hello(name='world'):
     return 'Hello {name} in func!'.format(name=name)
 
 
+def upload():
+    """上传文件
+    注意：上传文件时，不能在函数名upload增加参数，否则会报错
+    """
+    ufile = request.files.get('file')
+    return {
+        "file": ufile.filename,
+    }
+
+
 if __name__ == '__main__':
     API(Example)
     print("==> curl -XPOST localhost:5000/Example/hello -d '{\"name\": \"IBBD\"}'")
@@ -47,5 +58,8 @@ if __name__ == '__main__':
 
     API(hello)
     print("==> curl -XPOST localhost:5000/hello -d '{\"name\": \"IBBD\"}'")
+
+    API(upload)
+    print("==> curl -XPOST localhost:5000/upload -F 'file=@README.md'")
 
     app.run(debug=True)
