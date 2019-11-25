@@ -11,9 +11,6 @@ pip3 install -r requirements.txt
 
 # 源码安装
 python setup.py install
-
-# 使用pip安装
-pip3 install -U git+https://github.com/ibbd-dev/python-fire-rest.git
 ```
 
 ## Usage
@@ -300,10 +297,7 @@ curl -XPOST localhost:5000/upload -F 'file=@README.md'
     "file": "README.md"
   },
   "messages": null
-}
 ```
-
-
 
 如果需要设置上传文件的大小，可以使用下面的方法：
 
@@ -311,6 +305,17 @@ curl -XPOST localhost:5000/upload -F 'file=@README.md'
 from fireRest import set_upload_size
 
 set_upload_size(1024*1024*10)     # 10MB
+```
+
+## 心跳服务
+用于判断服务是否正常运行，用于在外部监控服务是否正常。
+
+```sh
+curl localhost:5000/heartbeat
+{
+  "code": 0,         # 该值为0则表示服务正常
+  "messages": ""
+}
 ```
 
 ## 其他功能
@@ -333,3 +338,4 @@ from fireRest import set_cors, set_upload_size, set_param
 - [x] 设置跨域: set_cors
 - [ ] 接口缓存
 - [ ] 函数参数类型校验
+- [x] 服务心跳服务

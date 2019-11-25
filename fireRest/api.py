@@ -135,6 +135,15 @@ def getRootHelp():
     return msg_help
 
 
+@app.route('/heartbeat', methods=['GET'])
+def heartbeat():
+    """心跳服务"""
+    data = {
+        'health': True
+    }
+    return _output_json(data)
+
+
 @app.route('/<string:func_name>', methods=['POST'])
 def restFunc(func_name):
     """函数API入口"""
