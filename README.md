@@ -5,7 +5,22 @@
 
 ## Install
 
+方式一：
+
 ```sh
+# 安装依赖
+pip3 install -r https://github.com/ibbd-dev/python-fire-rest/raw/master/requirements.txt
+
+# 安装
+pip3 install git+https://github.com/ibbd-dev/python-fire-rest.git
+```
+
+方式二：
+
+```sh
+git clone https://github.com/ibbd-dev/python-fire-rest
+cd python-fire-rest
+
 # 安装依赖
 pip3 install -r requirements.txt
 
