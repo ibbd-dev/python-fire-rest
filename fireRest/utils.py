@@ -43,5 +43,7 @@ class RestEncoder(json.JSONEncoder):
             return obj.tolist()
         elif isinstance(obj, bytes):
             return str(obj, encoding='utf-8')
+        elif isinstance(obj, np.bool_):
+            return bool(obj)
 
         return json.JSONEncoder.default(self, obj)
