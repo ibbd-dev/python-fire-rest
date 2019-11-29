@@ -6,6 +6,7 @@
 import io
 import cv2
 import base64
+import json
 from PIL import Image
 import numpy as np
 
@@ -31,3 +32,16 @@ def cv2_base64(img, format='JPEG'):
     out_img.save(output_buffer, format='JPEG')
     binary_data = output_buffer.getvalue()
     return str(base64.b64encode(binary_data), encoding='utf8')
+
+
+class RestEncoder(json.JSONEncoder):
+    """
+    使用：json.dumps(data, cls=RestEncoder)
+    """
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, bytes):
+            return str(obj, encoding='utf-8')
+
+        return json.JSONEncoder.default(self, obj)
