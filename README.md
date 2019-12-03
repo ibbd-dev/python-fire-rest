@@ -333,6 +333,26 @@ curl localhost:5000/heartbeat
 }
 ```
 
+## 图像格式转换函数库
+在涉及到图像处理的接口中，经常需要在各种格式之间转换，主要是3种格式之间：
+
+- base64格式
+- PIL格式
+- cv2格式
+
+例如接口输入输出通常是base64格式，而对图像进行处理时通常是cv2格式或者PIL格式，所以经常需要进行转换。
+
+```python
+# PIL格式如base64格式的转换
+from fireRest.image import base64_pil, pil_base64
+
+# cv2格式与base64格式的转换
+from fireRest.image import base64_cv2, cv2_base64
+
+# cv2格式与PIL格式
+from fireRest.image import pil_cv2, cv2_pil
+```
+
 ## 其他功能
 
 - 设置跨域
