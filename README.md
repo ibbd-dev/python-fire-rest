@@ -354,3 +354,4 @@ from fireRest import set_cors, set_upload_size, set_param
 - [ ] 接口缓存
 - [ ] 函数参数类型校验
 - [x] 服务心跳服务
+- [x] 图像格式转换函数库
