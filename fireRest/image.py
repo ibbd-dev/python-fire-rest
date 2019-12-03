@@ -11,18 +11,18 @@ from PIL import Image
 from io import BytesIO
 
 
-def base64_cv2(pic):
+def base64_cv2(b64):
     """将base64格式的图片转换为cv2格式"""
-    tmp = pic.split(',')[0]
-    pic = pic[len(tmp)+1:]
-    pic = base64.b64decode(pic)
-    pic = Image.open(BytesIO(pic))
+    tmp = b64.split(',')[0]
+    b64 = b64[len(tmp)+1:]
+    b64 = base64.b64decode(b64)
+    img = Image.open(BytesIO(b64))
     if 'png' in tmp:   # 先转化为jpg
-        bg = Image.new("RGB", pic.size, (255, 255, 255))
-        bg.paste(pic, pic)
-        pic = bg
+        bg = Image.new("RGB", img.size, (255, 255, 255))
+        bg.paste(img, img)
+        img = bg
 
-    return cv2.cvtColor(np.asarray(pic), cv2.COLOR_RGB2BGR)
+    return cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
 
 
 def cv2_base64(img, format='JPEG'):
@@ -42,10 +42,10 @@ def base64_pil(b64):
     return Image.open(image_data)
 
 
-def pil_base64(image, format='JPEG'):
+def pil_base64(img, format='JPEG'):
     """将PIL图片转换为base64格式"""
     buf = BytesIO()
-    image.save(buf, format=format)
+    img.save(buf, format=format)
     binary_data = buf.getvalue()
     return str(base64.b64encode(binary_data), encoding='utf8')
 
