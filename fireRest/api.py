@@ -56,7 +56,9 @@ def API(ctrl):
     global action_list, action_names
 
     ctrl_name = ctrl.__name__
-    if isinstance(ctrl, types.FunctionType):  # 函数
+    # Cython中函数的类型会被改变
+    if isinstance(ctrl, types.FunctionType) \
+            or type(ctrl).__name__ == "cython_function_or_method":   # 函数
         key = (ctrl_name)
         action_list[key] = ctrl
         action_names.append(['/'+ctrl_name, _get_func_help(ctrl)])
