@@ -87,11 +87,7 @@ def pil_cv2(img):
 def gif_jpg(img):
     """GIF格式图片转化为jpg"""
     palette = img.getpalette()
-    try:
-        img.putpalette(palette)
-        new_img = Image.new("RGB", img.size)
-        new_img.paste(img)
-        return new_img
-    except EOFError:
-        pass # end of sequence
-    return None
+    img.putpalette(palette)
+    new_img = Image.new("RGB", img.size)
+    new_img.paste(img)
+    return new_img
