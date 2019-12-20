@@ -63,3 +63,16 @@ def cv2_pil(img):
 def pil_cv2(img):
     """将图片从PIL转换为cv2格式"""
     return cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
+
+
+def gif_jpg(img):
+    """GIF格式图片转化为jpg"""
+    palette = img.getpalette()
+    try:
+        img.putpalette(palette)
+        new_img = Image.new("RGB", img.size)
+        new_img.paste(img)
+        return new_img
+    except EOFError:
+        pass # end of sequence
+    return None
