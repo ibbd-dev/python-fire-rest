@@ -3,6 +3,25 @@
 # 图像格式处理相关函数
 # Author: alex
 # Created Time: 2019年09月04日 星期三 09时31分18秒
+"""
+from PIL import Image
+img = Image.open(path)
+
+img.mode模式:
+1             1位像素，黑和白，存成8位的像素
+L             8位像素，黑白
+P             8位像素，使用调色板映射到任何其他模式
+RGB           3×8位像素，真彩
+RGBA          4×8位像素，真彩+透明通道
+CMYK          4×8位像素，颜色隔离
+YCbCr         3×8位像素，彩色视频格式
+I             32位整型像素
+F             32位浮点型像素
+
+img.format: 这和文件后缀对应
+
+注意P模式的图片，对应的format格式可能是GIF
+"""
 import re
 import cv2
 import base64
