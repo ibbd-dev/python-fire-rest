@@ -69,6 +69,9 @@ def base64_pil(b64):
 def pil_base64(img, format='JPEG'):
     """将PIL图片转换为base64格式"""
     buf = BytesIO()
+    if img.mode != 'RGBA':
+        img = img.convert('RGB')
+
     img.save(buf, format=format)
     binary_data = buf.getvalue()
     return str(base64.b64encode(binary_data), encoding='utf8')
