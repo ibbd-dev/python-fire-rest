@@ -94,3 +94,20 @@ def gif_jpg(img):
     new_img = Image.new("RGB", img.size)
     new_img.paste(img)
     return new_img
+
+
+def intersection_area(box1, box2):
+    """计算两个矩形的重叠面积"""
+    x1, y1, xb1, yb1 = box1
+    x2, y2, xb2, yb2 = box2
+
+    # 相交矩形
+    ax, ay, bx, by = max(x1, x2), max(y1, y2), min(xb1, xb2), min(yb1, yb2)
+    if ax >= bx or ay >= by:
+        return 0
+
+    # 重叠面积
+    in_area = (bx-ax) * (by-ay)
+    # print((ax, ay, bx, by))
+    # print('相交面积：%d' % in_area)
+    return in_area
