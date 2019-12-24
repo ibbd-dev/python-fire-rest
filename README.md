@@ -353,6 +353,11 @@ from fireRest.image import base64_cv2, cv2_base64
 from fireRest.image import pil_cv2, cv2_pil
 ```
 
+还有其他一些图像相关的功能：
+
+- GIF格式转JPG格式
+- 计算两个矩形的重叠面积
+
 ## 其他功能
 
 - 设置跨域
