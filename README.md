@@ -292,11 +292,16 @@ from flask import request
 
 def upload():
     """上传文件
-    注意：上传文件时使用multipart/form-data，不能在函数名upload增加参数，否则会报错
+    注意：上传文件时，不能在函数名upload增加参数，否则会报错
+    测试：
+    res = requests.post(url, files={'file': open('/path/to/filename')}).json()
     """
-    ufile = request.files.get('file')   # 文件对象
+    ufile = request.files.get('file')
+    # 你的处理代码在这里。。。
+    # ufile就是文件对象，对应表单域中的file
+    # 如果需要可以同时传多个文件对象
     return {
-        "file": ufile.filename,
+        "file": ufile.filename,   # 这里只是一个样例返回
     }
 ```
 
