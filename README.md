@@ -294,14 +294,25 @@ def upload():
     """上传文件
     注意：上传文件时，不能在函数名upload增加参数，否则会报错
     测试：
-    res = requests.post(url, files={'file': open('/path/to/filename')}).json()
+    files = {'file': open('/path/to/filename', 'rb')}
+    res = requests.post(url, files=files).json()
     """
     ufile = request.files.get('file')
     # 你的处理代码在这里。。。
     # ufile就是文件对象，对应表单域中的file
     # 如果需要可以同时传多个文件对象
+    print(type(ufile))   # 对象类型：werkzeug.datastructures.FileStorage
+
+    # ufile.stream 获取文件流对象
+    img = Image.open(ufile.stream)
+
+    # 保存文件
+    ufile.save('/tmp/' + secure_filename('hello.png'))
+    ufile.close()
     return {
         "file": ufile.filename,   # 这里只是一个样例返回
+        "size": img.size,
+        "mode": img.mode,
     }
 ```
 
